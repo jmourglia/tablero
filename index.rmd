@@ -1,5 +1,5 @@
 ---
-title: "Tablero en GitHub"
+title: "Distribucion de Escuelas en Corrientes"
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns
@@ -13,18 +13,49 @@ library(flexdashboard)
 Column {data-width=650}
 -----------------------------------------------------------------------
 
-### Chart A
+### Escuelas Secundarias Corrientes
 
 ```{r}
+library(leaflet)
+library(leaflet.extras)
+library(readxl)
+# library(sp)
 
+datos<-read.csv("escuelas secundarias.csv") # Escuelas secundarias
+leaflet(datos) %>% addTiles() %>% addProviderTiles(providers$CartoDB.Positron) %>%
+  #addBootstrapDependency() %>%
+  addMarkers(data=datos,
+             lng=~Longitud, lat=~Latitud, 
+             label=~Cueanexo,
+             popup = paste0("Nombre:", as.character(datos$Cueanexo)),
+             clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = F),
+             labelOptions = labelOptions(noHide = F,
+                                         direction = 'auto'))
 ```
 
-Column {data-width=350}
+Column {data-width=450}
 -----------------------------------------------------------------------
 
-### Chart B
+### Escuelas Primarias Corrientes
 
 ```{r}
+prima<-read_xlsx("C:/Users/Los Mourglia/Desktop/mapa/escuelas primarias.xlsx")
+
+leaflet(datos) %>% addTiles() %>% 
+  
+ addCircleMarkers(data=prima,
+             lng=~Longitud, lat=~Latitud,
+             label=~Cueanexo,
+             #icon= icons,
+             popup = paste0("Nombre: ", as.character(prima$Nombre)),
+             clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = F),
+             labelOptions = labelOptions(noHide = F,
+                                         direction = 'auto')) %>% 
+ 
+  addDrawToolbar(
+    targetGroup='datos',
+    editOptions = editToolbarOptions(selectedPathOptions = selectedPathOptions()))
+
 
 ```
 
