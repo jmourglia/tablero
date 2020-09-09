@@ -59,9 +59,19 @@ leaflet(datos) %>% addTiles() %>%
 
 ```
 
-### Chart C
+### Escuelas Rurales Argentina
 
 ```{r}
-
+rural<-read.csv("escuelas_rurales.csv") # Escuelas Rurales
+leaflet(rural) %>% addTiles('http://wms.ign.gob.ar/geoserver/gwc/service/tms/1.0.0/capabaseargenmap@EPSG:3857@png/{z}/{x}/{-y}.png', 
+           attribution = "Argenmap v2 - Instituto Geográfico Nacional") %>% 
+  #addBootstrapDependency() %>%
+  addMarkers(data=rural,
+             lng=~Longitud, lat=~Latitud, 
+             label=~CUE,
+             popup = paste0("Nombre:", as.character(rural$Nombre)),
+             clusterOptions = markerClusterOptions(removeOutsideVisibleBounds = F),
+             labelOptions = labelOptions(noHide = F,
+                                         direction = 'auto'))
 ```
 
